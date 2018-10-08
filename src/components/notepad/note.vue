@@ -13,9 +13,9 @@
         <div slot="right" @click="deletePic">
         删除
         </div>
-      <!--<div slot="right" @click.stop="addNewBank()">-->
-      <!--新建-->
-      <!--</div>-->
+      <div slot="right" @click.stop="addNewBank()">
+      新建
+      </div>
       </yd-navbar>
 
 
@@ -41,15 +41,12 @@
                         v-model="newNoteData.noteDescription"
               ></textarea>
             </div>
-
-              <div class="submitWrap">
-                <yd-button size="large" type="primary" @click.native="saveNewNote()">保存</yd-button>
-                <yd-button size="large" type="hollow" @click.native="clearForm()">重置</yd-button>
-              </div>
-
+            <div class="btn-group-inline">
+               <z-button size="large" type="danger" @click.native="saveNewNote()">保存</z-button>
+               <z-button size="large" type="hollow" @click.native="clearForm()">重置</z-button>
+            </div>
           </form>
         </div>
-
 
         <!--历史记事本列表-->
          <div class="historyList">
@@ -66,17 +63,18 @@
          </div>
 
 
-        <div>now </div>
-        <hr/>
-        <div style="padding:5px;">
-          <yd-button size="small" type="primary" @click.native="getNowtime()">t1</yd-button>
-          <yd-button size="small" type="primary">t2</yd-button>
-          <yd-button size="small" type="primary">t3</yd-button>
-        </div>
-        <hr/>
-        <div style="padding:20px;">
+        <!--<div>now </div>-->
+        <!--<hr/>-->
+        <!--<div style="padding:5px;">-->
+          <!--<yd-button size="small" type="primary" @click.native="getNowtime()">t1</yd-button>-->
+          <!--<yd-button size="small" type="primary">t2</yd-button>-->
+          <!--<yd-button size="small" type="primary">t3</yd-button>-->
+        <!--</div>-->
 
+        <div class="btn-group-inline">
+             <z-button size="large" v-on:click.native="testJs">test</z-button>
         </div>
+
 
 
       </div>
@@ -88,6 +86,11 @@
 import domtoimage from 'dom-to-image'
 //store
 import {mapState,mapMutations,mapGetters,mapActions} from 'vuex'
+
+//引入自定义组件按钮
+import zButton from '../../globalComponents/button'
+
+
 
 export default {
     name:'Note',
@@ -102,22 +105,50 @@ export default {
           },
           myTitle:'',
           noteInfo:"",
-          timeFlag:''
+          timeFlag:'',
+
+          messgae:'shelley'
         }
     },
+     components:{
+       zButton
+     },
+
+
+  //过滤器
+  filters:{
+    capitalize:function(value){
+      return value+'001'
+    }
+  },
+
     mounted(){
+      console.log('------localStorage----start-')
+      console.log(this.msgSt)
+      console.log('------localStorage----end-')
+    },
+    created(){
 
     },
+
     watch:{
 
     },
     computed:{
-      //...mapState(['bt','noteDatas']),
+      ...mapState(['msgSt']),
+
+      ...mapGetters(['GET_NOTES']),
       noteDatas(){
-        return this.$store.state.b.noteDatas
+        return this.GET_NOTES
       },
     },
     methods:{
+      //测试js
+      testJs(){
+
+      },
+
+
       //调用store中的方法
       ...mapMutations(['ADD_NOTES','DELETE_NOTES']),
 
@@ -145,14 +176,25 @@ export default {
       //添加新记事到列表中
       saveNewNote(){
         let data = {}
-        if(!this.newNoteData.title && !this.newNoteData.noteDescription){
+        // if(!this.newNoteData.title || !this.newNoteData.noteDescription){
+        //   return
+        // }
+
+        if(!this.newNoteData.title){
+          alert('标题不能为空')
           return
         }
+        if(!this.newNoteData.noteDescription){
+          alert('描述不能为空')
+          return
+        }
+
         data.title = this.newNoteData.title
         data.description = this.newNoteData.noteDescription
         //this.noteData.unshift(data)
         //调用store,暂存数据
         this.ADD_NOTES(data)
+        this.clearForm()
       },
       //删除
       deleteNote(index){
@@ -166,6 +208,20 @@ export default {
       clearForm(){
         this.newNoteData.title = ''
         this.newNoteData.noteDescription = ''
+
+        let ele = document.querySelectorAll('.com-input-container')
+        console.log(ele)
+
+        ele.forEach((item,index,arr)=>{
+          item.removeAttribute('class')
+          item.setAttribute('class','com-input-container')
+        })
+
+
+        // ele.removeAttribute('class')
+        // console.log(ele)
+        // ele.setAttribute('class','com-input-container')
+        // console.log(ele)
       },
 
 
