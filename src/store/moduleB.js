@@ -1,10 +1,10 @@
-import {ADD_NOTES,DELETE_NOTES,GET_NOTES} from './storeTypes'
+import {ADD_NOTES,DELETE_NOTES,GET_NOTES,EDIT_NOTES} from './storeTypes'
 
 import UserData from '../commonJs/storageMethods'
 
 export default {
     state:{
-        msgSt:'huhua001',
+        msgName:'huhua001',
         noteDatas:[
           {title:'huahua我的记事本-1',description:'今天是周一，晚上下班有雨'}
         ],
@@ -24,14 +24,31 @@ export default {
         //保存到缓存中
         UserData.save(state.noteDatas,state.keyName)
         console.log('add*****', UserData.get(state.keyName))
-
       },
+
       //删除记录
       [DELETE_NOTES](state,index){
         //this.noteData.splice(index,1)
         state.noteDatas.splice(index,1)
         UserData.save(state.noteDatas,state.keyName)
+      },
+
+      //修改记录
+      [EDIT_NOTES](state,index){
+        console.log('---out--index---:',index)
+        let itemIndex = index
+        let arr = []
+        arr = state.noteDatas.forEach((item,index,arr)=>{
+           if(index === itemIndex){
+             console.log('note index---:',index)
+             return item
+           }
+        })
+        console.log('arr1---',arr)
+        return arr
       }
+
+
     },
 
     actions:{},
@@ -44,6 +61,11 @@ export default {
            state.noteDatas = data
          }
          return state.noteDatas
-       }
+       },
+
+      GetMSG(state){
+         return state.msgName
+      }
+
     }
 }

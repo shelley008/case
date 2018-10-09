@@ -1,5 +1,5 @@
 <template>
-    <div id="myNode" ref="picNode">
+      <div id="myNode" ref="picNode">
 
        <!--顶部导航 -->
       <yd-navbar title="navber" fixed  bgcolor="#fff" fontSize="18px" class="navBar">
@@ -13,9 +13,9 @@
         <div slot="right" @click="deletePic">
         删除
         </div>
-      <div slot="right" @click.stop="addNewBank()">
-      新建
-      </div>
+      <!--<div slot="right" @click.stop="addNewBank()">-->
+      <!--新建-->
+      <!--</div>-->
       </yd-navbar>
 
 
@@ -57,7 +57,7 @@
                      <dd>{{note.description}}</dd>
                    </dl>
                    <span @click="deleteNote(index)">删除</span>
-                   <span>修改</span>
+                   <span v-on:click="editNote(index)">修改</span>
                  </li>
              </ul>
          </div>
@@ -75,7 +75,7 @@
              <z-button size="large" v-on:click.native="testJs">test</z-button>
         </div>
 
-
+        <div>msg:{{GetMSG}}</div>
 
       </div>
     </div>
@@ -107,7 +107,20 @@ export default {
           noteInfo:"",
           timeFlag:'',
 
-          messgae:'shelley'
+          messgae:'shelley',
+
+
+          arrObj:[
+            {name: "shelley", age: 14},
+            {name: "timo", age: 15},
+            {name: "lily", age: 16},
+            {name: "lucy", age: 16}
+          ],
+          obj1:{
+            name:'shelley',
+            tel:1234567890,
+            age:34
+          },
         }
     },
      components:{
@@ -123,9 +136,9 @@ export default {
   },
 
     mounted(){
-      console.log('------localStorage----start-')
-      console.log(this.msgSt)
-      console.log('------localStorage----end-')
+      console.log('------msg----start-')
+      console.log(this.GetMSG)
+      console.log('------msg----end-')
     },
     created(){
 
@@ -135,41 +148,26 @@ export default {
 
     },
     computed:{
-      ...mapGetters(['GET_NOTES']),
+      ...mapGetters(['GET_NOTES','GetMSG']),
       noteDatas(){
         return this.GET_NOTES
       },
+
+      // ...mapState({
+      //   msg:(state)=>state.msgName
+      // })
     },
     methods:{
       //测试js
       testJs(){
 
+        var a = [1,2,3,4,5];
+        console.log(a.splice(1,3)); //[2, 3, 4]
+        console.log(a)
+
       },
-
-
       //调用store中的方法
-      ...mapMutations(['ADD_NOTES','DELETE_NOTES']),
-
-      //时间处理
-      getNowtime(){
-
-        console.log('************time***********')
-        let d = new Date();
-        console.log('************time***********')
-        console.log(d)
-        console.log(d.getFullYear())           //年份
-        console.log(d.getMonth())              //返回月份 (0 ~ 11)
-        console.log(d.getDate())               //一个月中的某一天 (1 ~ 31)
-        console.log(d.getDay())                //一周中的某一天 (0 ~ 6)
-        console.log(d.getHours())              //小时 (0 ~ 23)
-        console.log(d.getMinutes())            //分钟 (0 ~ 59)
-        console.log(d.getMilliseconds())       //毫秒(0 ~ 999)
-        console.log(d.getSeconds())            //秒数 (0 ~ 59)
-        console.log(d.getTime())               //返回 1970 年 1 月 1 日至今的毫秒数
-        console.log(Date.parse(new Date()))    //返回 1970 年 1 月 1 日午夜到指定日期（字符串）的毫秒数。
-
-        console.log('************time***********')
-      },
+      ...mapMutations(['ADD_NOTES','DELETE_NOTES','EDIT_NOTES']),
 
       //添加新记事到列表中
       saveNewNote(){
@@ -177,7 +175,6 @@ export default {
         // if(!this.newNoteData.title || !this.newNoteData.noteDescription){
         //   return
         // }
-
         if(!this.newNoteData.title){
           alert('标题不能为空')
           return
@@ -186,7 +183,6 @@ export default {
           alert('描述不能为空')
           return
         }
-
         data.title = this.newNoteData.title
         data.description = this.newNoteData.noteDescription
         //this.noteData.unshift(data)
@@ -199,6 +195,12 @@ export default {
         console.log('index----',index);
         //this.noteData.splice(index,1)
         this.DELETE_NOTES(index)
+      },
+      //修改记录
+      editNote(itemIndex){
+        let arr = []
+        arr = this.EDIT_NOTES(itemIndex)
+        console.log('arr2---',arr)
       },
 
 
