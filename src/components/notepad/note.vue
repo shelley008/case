@@ -161,9 +161,18 @@ export default {
       //测试js
       testJs(){
 
-        var a = [1,2,3,4,5];
-        console.log(a.splice(1,3)); //[2, 3, 4]
-        console.log(a)
+        console.log('****-------------*****')
+        let temp = this.arrObj.filter((item,index,arr)=>{
+           return item.name == 'shelley'
+        })
+        let temp2 = new Object()
+        temp2 = [{name: "lucy", age: 16}]
+        console.log(temp[0])
+        console.log(temp2[0])
+        console.log(typeof temp2)
+        console.log(typeof this.arrObj)
+        console.log(this.arrObj.indexOf(temp2[0]))
+
 
       },
       //调用store中的方法
